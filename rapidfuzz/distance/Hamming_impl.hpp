@@ -23,7 +23,13 @@ class Hamming : public DistanceBase<Hamming, size_t, 0, std::numeric_limits<int6
     static size_t _distance(const Range<InputIt1>& s1, const Range<InputIt2>& s2, bool pad,
                             size_t score_cutoff, size_t)
     {
-        if (!pad && s1.size() != s2.size()) throw std::invalid_argument("Sequences are not the same length.");
+        if (!pad && s1.size() != s2.size()) {
+#ifdef __cpp_exceptions
+            throw std::invalid_argument("Sequences are not the same length.");
+#else
+            std::abort();
+#endif
+        }
 
         size_t min_len = std::min(s1.size(), s2.size());
         size_t dist = std::max(s1.size(), s2.size());
@@ -39,7 +45,13 @@ class Hamming : public DistanceBase<Hamming, size_t, 0, std::numeric_limits<int6
 template <typename InputIt1, typename InputIt2>
 Editops hamming_editops(const Range<InputIt1>& s1, const Range<InputIt2>& s2, bool pad, size_t)
 {
-    if (!pad && s1.size() != s2.size()) throw std::invalid_argument("Sequences are not the same length.");
+    if (!pad && s1.size() != s2.size()) {
+#ifdef __cpp_exceptions
+        throw std::invalid_argument("Sequences are not the same length.");
+#else
+        std::abort();
+#endif
+    }
 
     Editops ops;
     size_t min_len = std::min(s1.size(), s2.size());

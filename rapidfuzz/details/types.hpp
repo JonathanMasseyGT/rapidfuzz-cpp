@@ -110,8 +110,20 @@ auto vector_slice(const Vec& vec, int start, int stop, int step) -> Vec
 {
     Vec new_vec;
 
-    if (step == 0) throw std::invalid_argument("slice step cannot be zero");
-    if (step < 0) throw std::invalid_argument("step sizes below 0 lead to an invalid order of editops");
+    if (step == 0) {
+#ifdef __cpp_exceptions
+        throw std::invalid_argument("slice step cannot be zero");
+#else
+        std::abort();
+#endif
+    }
+    if (step < 0) {
+#ifdef __cpp_exceptions
+        throw std::invalid_argument("step sizes below 0 lead to an invalid order of editops");
+#else
+        std::abort();
+#endif
+    }
 
     if (start < 0)
         start = std::max<int>(start + static_cast<int>(vec.size()), 0);
@@ -137,8 +149,20 @@ auto vector_slice(const Vec& vec, int start, int stop, int step) -> Vec
 template <typename Vec>
 void vector_remove_slice(Vec& vec, int start, int stop, int step)
 {
-    if (step == 0) throw std::invalid_argument("slice step cannot be zero");
-    if (step < 0) throw std::invalid_argument("step sizes below 0 lead to an invalid order of editops");
+    if (step == 0) {
+#ifdef __cpp_exceptions
+        throw std::invalid_argument("slice step cannot be zero");
+#else
+        std::abort();
+#endif
+    }
+    if (step < 0) {
+#ifdef __cpp_exceptions
+        throw std::invalid_argument("step sizes below 0 lead to an invalid order of editops");
+#else
+        std::abort();
+#endif
+    }
 
     if (start < 0)
         start = std::max<int>(start + static_cast<int>(vec.size()), 0);
@@ -293,7 +317,13 @@ public:
         result.set_src_len(src_len);
         result.set_dest_len(dest_len);
 
-        if (subsequence.size() > size()) throw std::invalid_argument("subsequence is not a subsequence");
+        if (subsequence.size() > size()) {
+#ifdef __cpp_exceptions
+            throw std::invalid_argument("subsequence is not a subsequence");
+#else
+            std::abort();
+#endif
+        }
 
         result.resize(size() - subsequence.size());
 
@@ -310,7 +340,13 @@ public:
                 result_pos++;
             }
             /* element of subsequence not part of the sequence */
-            if (op_iter == op_end) throw std::invalid_argument("subsequence is not a subsequence");
+            if (op_iter == op_end) {
+#ifdef __cpp_exceptions
+                throw std::invalid_argument("subsequence is not a subsequence");
+#else
+                std::abort();
+#endif
+            }
 
             if (sop.type == EditType::Insert)
                 offset++;

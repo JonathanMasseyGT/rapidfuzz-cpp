@@ -151,7 +151,13 @@ public:
 
     Range subseq(size_t pos = 0, size_t count = std::numeric_limits<size_t>::max())
     {
-        if (pos > size()) throw std::out_of_range("Index out of range in Range::substr");
+        if (pos > size()) {
+#ifdef __cpp_exceptions
+            throw std::out_of_range("Index out of range in Range::substr");
+#else
+            std::abort();
+#endif
+        }
 
         Range res = *this;
         res.remove_prefix(pos);

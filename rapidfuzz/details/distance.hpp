@@ -424,7 +424,11 @@ protected:
     {
         const T& derived = static_cast<const T&>(*this);
         if (score_count < derived.result_count())
+#ifdef __cpp_exceptions
             throw std::invalid_argument("scores has to have >= result_count() elements");
+#else
+            std::abort();
+#endif
 
         // reinterpretation only works when the types have the same size
         ResType* scores_orig = nullptr;

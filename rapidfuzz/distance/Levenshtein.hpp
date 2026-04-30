@@ -341,7 +341,11 @@ public:
     {
         str_lens.resize(result_count());
         if (weights.delete_cost != 1 || weights.insert_cost != 1 || weights.replace_cost > 2)
+#ifdef __cpp_exceptions
             throw std::invalid_argument("unsupported weights");
+#else
+            std::abort();
+#endif
     }
 
     /**
@@ -374,7 +378,13 @@ public:
         auto block = (pos * MaxLen) / 64;
         assert(len <= MaxLen);
 
-        if (pos >= input_count) throw std::invalid_argument("out of bounds insert");
+        if (pos >= input_count) {
+#ifdef __cpp_exceptions
+            throw std::invalid_argument("out of bounds insert");
+#else
+            std::abort();
+#endif
+        }
 
         str_lens[pos] = static_cast<size_t>(len);
         for (; first1 != last1; ++first1) {
@@ -390,7 +400,11 @@ private:
                    size_t score_cutoff = std::numeric_limits<size_t>::max()) const
     {
         if (score_count < result_count())
+#ifdef __cpp_exceptions
             throw std::invalid_argument("scores has to have >= result_count() elements");
+#else
+            std::abort();
+#endif
 
         auto scores_ = detail::make_range(scores, scores + score_count);
         RAPIDFUZZ_IF_CONSTEXPR (MaxLen == 8)

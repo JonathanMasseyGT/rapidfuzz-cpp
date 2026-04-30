@@ -129,7 +129,11 @@ private:
                      double score_cutoff = 0.0) const
     {
         if (score_count < result_count())
+#ifdef __cpp_exceptions
             throw std::invalid_argument("scores has to have >= result_count() elements");
+#else
+            std::abort();
+#endif
 
         scorer.similarity(scores, score_count, s2, std::min(0.7, score_cutoff));
 
